@@ -1,0 +1,79 @@
+System Component Diagram
+
+       ┌─────────────────────────────────────────────────────────┐
+       │               Raw News Article Input                    │
+       └───────────────────────────┬─────────────────────────────┘
+                                   │
+                                   ▼
+       ┌─────────────────────────────────────────────────────────┐
+       │             [Component 1: Text Preprocessor]            │
+       │  • Tokenization, Lowercasing, Lemmatization, Cleaning   │
+       └───────────────────────────┬─────────────────────────────┘
+                                   │
+            ┌──────────────────────┼──────────────────────┐
+            ▼                      ▼                      ▼
+┌──────────────────────┐┌──────────────────────┐┌──────────────────────┐
+│ [Component 2: Neural ││ [Component 3: Syntax ││ [Component 4: Neural │
+│   Sequence Engine]   ││   & Parsing Engine]  ││  Language Model]     │
+│                      ││                      ││                      │
+│ • Task 3: POS Tagging││ • Task 5: Syntactic  ││ • Task 1: Neural LM  │
+│ • Task 4: HMM        ││   Dependency Parsing ││   (Next-Word         │
+│   Sequence Modeling  ││   (SVO Extraction)   ││   Prediction)        │
+└───────────┬──────────┘└───────────┬──────────┘└───────────┬──────────┘
+            │                       │                       │
+            │  (Stylistic/Tag       │  (Relationship        │  (Context
+            │   Features)           │   Triplets)           │   Probabilities)
+            └───────────────────────┼───────────────────────┘
+                                    ▼
+       ┌─────────────────────────────────────────────────────────┐
+       │          [Component 5: Vector Embedding Space]          │
+       │  • Task 2: Word2Vec / GloVe / FastText Semantic Vectors  │
+       └───────────────────────────┬─────────────────────────────┘
+                                   │ 
+                                   │ (Feature Aggregation: Embeddings + NLP Meta-Features)
+                                   ▼
+       ┌─────────────────────────────────────────────────────────┐
+       │         [Component 6: Downstream Classifiers]          │
+       │                                                         │
+       │  ┌───────────────────────────┐ ┌─────────────────────┐  │
+       │  │ Multi-Class Classifier    │ │ Binary Classifier   │  │
+       │  │ (Politics, Tech, Sports,  │ │ (Fake vs. Real News │  │
+       │  │ Entertainment, Business,  │ │ Detection)          │  │
+       │  │ Health)                   │ │                     │  │
+       │  └─────────────┬─────────────┘ └──────────┬──────────┘  │
+       └────────────────┼──────────────────────────┼─────────────┘
+                        │                          │
+                        └─────────────┬────────────┘
+                                      ▼
+       ┌─────────────────────────────────────────────────────────┐
+       │             [Component 7: Evaluation & UI]              │
+       │  • Displays: Extracted Entities, Category, Fake/Real    │
+       │    Status, NLP Metrics, and System Performance Metrics   │
+       └─────────────────────────────────────────────────────────┘
+Relating the Components to Assignment TasksTo look at this as a unified narrative, think of each component as a specialist handling a specific layer of human language—moving from raw characters to grammar, 
+then to deep semantics, and finally to a grand decision.
+1. Component 1: Text Preprocessor -> GroundworkBefore any modeling happens, this component cleans up the noisy raw text. It converts words to lowercase, standardizes punctuation, and strips out meaningless stop words so the mathematical models aren't distracted by noise.
+
+2. Component 2: Neural Sequence Engine -> Task 3 (POS Tagging) & Task 4 (HMM)This component looks at the structural DNA of the text.Task 3 (POS Tagging) labels words as nouns, verbs, adjectives, or proper nouns.  Task 4 (HMM) uses those tags to analyze the text probabilistically. 
+Because fake news often relies on distinct, sensationalist grammatical styles (e.g., heavy use of adjectives, exclamation markers, or abrupt transitions), 
+the HMM treats these POS tag sequences as a signature to help catch anomalies.
+
+3. Component 3: Syntax & Parsing Engine -> Task 5 (Parsing)While the HMM looks at sequential patterns, this engine looks at structural hierarchy. 
+By building a dependency tree, it extracts Subject-Verb-Object triplets (who did what to whom). 
+This satisfies the requirement to pull out clear relationships between entities and claims, which gives  factual points to evaluate.  
+
+4. Component 4: Neural Language Model -> Task 1 (Neural LM)This module acts as the "native speaker" of the system. 
+Trained as an RNN or LSTM, it learns the deep probability distribution of the news vocabulary to predict upcoming words.
+If an article is fed into this model and yields extremely low contextual probabilities, it indicates that the language patterns are highly unnatural or fabricated, feeding another valuable clue to the detection system.  
+
+5. Component 5: Vector Embedding Space -> Task 2 (Vector Embedding)This is the system's semantic core. 
+It maps words or entire documents into dense vector spaces using architectures like Word2Vec or GloVe. 
+It translates abstract textual meaning into raw numbers, ensuring that words like "stocks" and "revenue" sit closely together, allowing downstream classifiers to understand numerical relationships easily.  
+
+6. Component 6 & 7: Downstream Classifiers & UI -> Final OutputThis is where the story ends. 
+The features generated by every single upstream component—the semantic vectors, 
+the structural parsing markers, the HMM transition probabilities, and the language model scores—are gathered here.
+One classifier maps these features to the 6 core news categories.  
+A parallel classifier makes a binary determination: Real or Fake.  
+The UI outputs a clean, scannable report showcasing the performance metrics, extracted entities, and classification results.  
+This setup ensures that we aren't building five disconnected mini-assignments
