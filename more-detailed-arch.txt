@@ -1,0 +1,34 @@
+                        ┌───────────────────────────┐
+                        │    Raw News Article Text  │
+                        └─────────────┬─────────────┘
+                                      │
+                                      ▼
+                      ┌───────────────────────────────┐
+                      │    Feature Extraction Layer   │
+                      └───────┬───────────────┬───────┘
+                              │               │
+            (Raw Word Tokens) │               │ (POS Tags, HMM, LM Scores, SVOs)
+                              ▼               ▼
+          ┌───────────────────────┐       ┌───────────────────────┐
+          │  Vector Embeddings    │       │   Structural / Style  │
+          │  (Word2Vec/GloVe Space│       │     Meta-Features     │
+          └───────────┬───────────┘       └───────────┬───────────┘
+                      │                               │
+                      ▼                               ▼
+          ┌───────────────────────┐       ┌───────────────────────┐
+          │   Cosine Similarity   │       │   Supervised Binary   │
+          │    vs. 6 Category     │       │       Classifier      │
+          │      Definitions      │       │ (Real vs Fake Model)  │
+          └───────────┬───────────┘       └───────────┬───────────┘
+                      │                               │
+                      ▼                               ▼
+         ┌─────────────────────────┐     ┌─────────────────────────┐
+         │ Predicted News Category │     │  Veracity Detection     │
+         │ (Sports, Tech, etc.)    │     │  (Fake or Real News)    │
+         └────────────┬────────────┘     └────────────┬────────────┘
+                      │                               │
+                      └───────────────┬───────────────┘
+                                      ▼
+                        ┌───────────────────────────┐
+                        │   Unified Output Report   │
+                        └───────────────────────────┘
